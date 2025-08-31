@@ -203,93 +203,84 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('scroll', animateOnScroll);
     animateOnScroll(); // Executar uma vez ao carregar
 
-  // Carrossel de imagens - Versão Corrigida
-const carousel = document.querySelector('.carousel');
-const inner = document.querySelector('.carousel-inner');
-const items = document.querySelectorAll('.carousel-item');
-const prevBtn = document.querySelector('.carousel-control.prev');
-const nextBtn = document.querySelector('.carousel-control.next');
-const indicatorsContainer = document.querySelector('.carousel-indicators');
-let currentIndex = 0;
-let intervalId;
+    // Carrossel de imagens
+    const carousel = document.querySelector('.carousel');
+    const inner = document.querySelector('.carousel-inner');
+    const items = document.querySelectorAll('.carousel-item');
+    const prevBtn = document.querySelector('.carousel-control.prev');
+    const nextBtn = document.querySelector('.carousel-control.next');
+    const indicatorsContainer = document.querySelector('.carousel-indicators');
+    let currentIndex = 0;
+    let intervalId;
 
-// Criar indicadores
-items.forEach((_, index) => {
-    const indicator = document.createElement('button');
-    indicator.classList.add('carousel-indicator');
-    if (index === 0) indicator.classList.add('active');
-    indicator.addEventListener('click', () => goToSlide(index));
-    indicatorsContainer.appendChild(indicator);
-});
-
-const indicators = document.querySelectorAll('.carousel-indicator');
-
-// Função para atualizar o carrossel
-function updateCarousel() {
-    // Ajustar a transformação para mover o inner
-    inner.style.transform = `translateX(-${currentIndex * 100}%)`;
-    
-    // Atualizar indicadores
-    indicators.forEach((indicator, index) => {
-        indicator.classList.toggle('active', index === currentIndex);
+    // Criar indicadores
+    items.forEach((_, index) => {
+        const indicator = document.createElement('button');
+        indicator.classList.add('carousel-indicator');
+        if (index === 0) indicator.classList.add('active');
+        indicator.addEventListener('click', () => goToSlide(index));
+        indicatorsContainer.appendChild(indicator);
     });
-}
 
-// Função para ir para um slide específico
-function goToSlide(index) {
-    currentIndex = index;
-    
-    // Garantir que o índice esteja dentro dos limites
-    if (currentIndex >= items.length) {
-        currentIndex = 0;
-    } else if (currentIndex < 0) {
-        currentIndex = items.length - 1;
+    const indicators = document.querySelectorAll('.carousel-indicator');
+
+    // Função para atualizar o carrossel
+    function updateCarousel() {
+        inner.style.transform = `translateX(-${currentIndex * 100}%)`;
+        
+        // Atualizar indicadores
+        indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === currentIndex);
+        });
     }
-    
-    updateCarousel();
-    resetInterval();
-}
 
-// Função para avançar para o próximo slide
-function nextSlide() {
-    goToSlide(currentIndex + 1);
-}
+    // Função para ir para um slide específico
+    function goToSlide(index) {
+        currentIndex = index;
+        if (currentIndex >= items.length) currentIndex = 0;
+        if (currentIndex < 0) currentIndex = items.length - 1;
+        updateCarousel();
+        resetInterval();
+    }
 
-// Função para voltar ao slide anterior
-function prevSlide() {
-    goToSlide(currentIndex - 1);
-}
+    // Função para avançar para o próximo slide
+    function nextSlide() {
+        goToSlide(currentIndex + 1);
+    }
 
-// Configurar intervalo para transição automática
-function startInterval() {
-    intervalId = setInterval(nextSlide, 4000); // Muda a cada 4 segundos
-}
+    // Função para voltar ao slide anterior
+    function prevSlide() {
+        goToSlide(currentIndex - 1);
+    }
 
-function resetInterval() {
-    clearInterval(intervalId);
+    // Configurar intervalo para transição automática
+    function startInterval() {
+        intervalId = setInterval(nextSlide, 5000); // Muda a cada 35 segundos
+    }
+
+    function resetInterval() {
+        clearInterval(intervalId);
+        startInterval();
+    }
+
+    // Event listeners
+    prevBtn.addEventListener('click', () => {
+        prevSlide();
+        resetInterval();
+    });
+
+    nextBtn.addEventListener('click', () => {
+        nextSlide();
+        resetInterval();
+    });
+
+    // Iniciar o carrossel
     startInterval();
-}
 
-// Event listeners para os botões de controle
-prevBtn.addEventListener('click', () => {
-    prevSlide();
-    resetInterval();
+    // Pausar quando o mouse estiver sobre o carrossel
+    carousel.addEventListener('mouseenter', () => {
+        clearInterval(intervalId);
+    });
+
+    carousel.addEventListener('mouseleave', startInterval);
 });
-
-nextBtn.addEventListener('click', () => {
-    nextSlide();
-    resetInterval();
-});
-
-// Iniciar o carrossel
-startInterval();
-
-// Pausar quando o mouse estiver sobre o carrossel
-carousel.addEventListener('mouseenter', () => {
-    clearInterval(intervalId);
-});
-
-carousel.addEventListener('mouseleave', startInterval);
-
-// Inicializar o carrossel
-updateCarousel();

@@ -201,7 +201,8 @@ img {
 }
 
 .btn-whatsapp {
-    background: var(--primary);
+    background: #25D366;
+    background: var();
     color: var(--white);
     padding: 15px 30px;
     border-radius: 30px;
@@ -383,12 +384,12 @@ img {
 
 .carousel-inner {
     display: flex;
-    transition: transform 0.6s ease-in-out;
+    transition: transform 0.5s ease;
 }
 
 .carousel-item {
-    flex: 0 0 100%;
     min-width: 100%;
+    position: relative;
 }
 
 .carousel-item img {
